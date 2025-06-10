@@ -340,52 +340,157 @@
 // // si quiero que la suma se ejecute 5 segundos despues tendria que ser algo asincrono
 // //que el hilo principal del programa no se bloquee
 
-// // promesas
+// // // promesas
 
 
-console.log("Me ejecute 5 segundos despues");
+// console.log("Me ejecute 5 segundos despues");
 
-console.log("Este mensaje aparece inmediatamente");
+// console.log("Este mensaje aparece inmediatamente");
 
-//setTimeout - nos permite ejecutar una funcion dado x tiempo
-// el primer parametro del setTimeout es la intruccion que quiero ejecutar (una funciona)
-// el segundo parametro es el tiempo, el tiempo que quiero que se ejecute, (temporizador)
-// si pongo 3 segundos la intruccion se ejecutara alos 3 segundos
+// //setTimeout - nos permite ejecutar una funcion dado x tiempo
+// // el primer parametro del setTimeout es la intruccion que quiero ejecutar (una funciona)
+// // el segundo parametro es el tiempo, el tiempo que quiero que se ejecute, (temporizador)
+// // si pongo 3 segundos la intruccion se ejecutara alos 3 segundos
 
 
-// funcion normal se le asigna a una variable y se puede usar en cualquier punto despues de su declaracion
-const intruccionA = () => {
+// // funcion normal se le asigna a una variable y se puede usar en cualquier punto despues de su declaracion
+// const intruccionA = () => {
 
-}
+// }
 
-// funcion anonima, se caracteriza por no estar asignada a una variable
-// desventaje que no la puedo usar en otra parte del codigo
-(() => {
-    console.log("funcion anonima");
-})();
+// // funcion anonima, se caracteriza por no estar asignada a una variable
+// // desventaje que no la puedo usar en otra parte del codigo
+// (() => {
+//     console.log("funcion anonima");
+// })();
 
-// settimeout trabaja con milisegundos
-setTimeout(() => {
-    console.log("Me ejecute alos 10 segundos");  
-},10000)
+// // settimeout trabaja con milisegundos
+// setTimeout(() => {
+//     console.log("Me ejecute alos 10 segundos");  
+// },10000)
 
-console.log("Me ejecute antes del timeout el flujo normal del programa");
+// console.log("Me ejecute antes del timeout el flujo normal del programa");
 
-//usando una funcion normal
+// //usando una funcion normal
 
-const intruccionB = (nombre, accion,edad) => {
-    console.log("Mi nombre es: ", nombre, " la accion que hice fue: ", accion," mi edad es: ", edad);
-}
+// const intruccionB = (nombre, accion,edad) => {
+//     console.log("Mi nombre es: ", nombre, " la accion que hice fue: ", accion," mi edad es: ", edad);
+//     return "Hola";
+// }
 
 //funcion setTimeout
 // ... significa que puedo pasar cualquier cantidad de argumentos o parametros
-setTimeout(intruccionB,5000,"Ana","Correr",13);
+// setTimeout(intruccionB,5000,"Ana","Correr",13);
 
 // flujo normal => ejecucion a => ejecucion b => ejecucion c
 // flujo asyncrono => declaro a(y lo voy a ejecutar alos 10) => ejecucion b => ejecucion a(se ejecuta alos 10)
 
 
+//conclusion de setTimeout nos sirve para ejecutar algo hasta cierto tiempo (temporizador)
+// primer parametro es la accion (puede ser una funcion normal o una anonima)
+// segundo parametros es el tiempo en milisegundos
+// tercer paramtros seria ... (que signfica cualquier cantidad de parametros que uno quiera que vaa tomar la funcion)
 
+
+// https://github.com/JackinJaxx/CursoJS.git
+
+// promesas
+
+// Una promesa en JavaScript es un objeto que representa la eventual finalización 
+// (o fracaso) de una operación asíncrona y el valor resultante de esa operación.
+
+// una promesa tiene 3 estados
+
+// pendiente - que no ha terminado la ejecucion- hasta que no se termine va 
+// a estar en estado pendiente
+
+// cumplida
+// que todo se ejecuto correctamente no hubo errores y (puedo recibir un valor)
+// resolve() // funcion para retornar algo una vez pasa el tiempo cumplido
+
+// rechazada
+// que todo se ejecuto correctamente pero en terminos de que se cumplio el tiempo
+// mas no logicamente
+// reject() error controlado
+
+// entro ala pagina => llamar a llamar imagenes para ponerlas en la pagina
+// las imagenes estan guardadas en un servidor lejos
+// estos dos procesos siguientes son asincronos
+// quiero esta imagen => servidor
+// (servidor) le da la imagen al cliente
+// para dar analogia el tiempo del setTimeput lo pondria el 
+// - el servidor que tan lejos este (mexico a rusia) 2 segundos o 3 o 5 segundos
+// - tu conexion a internet
+// - logica que tengas intermediaria
+
+const verificarCredenciales = (usuarioLogeado) => {
+    const usuarioReferencia = {
+        username : "alejandro",
+        password : "1234",
+        nombre: "Jose alejandro",
+        telefono : 962,
+        cumpleaños : "08/04/2002"
+    }
+
+    let verificacion = false;
+    verificacion = usuarioLogeado.username === usuarioReferencia.username;
+    verificacion = usuarioLogeado.password === usuarioReferencia.password
+
+    return verificacion ? usuarioReferencia : null
+}
+
+// verificacion de datos 
+// un objeto es true
+// if(objeto) da true
+// null js lo toma false
+const objetoPruebaNull = null;
+const objetoPrueba = {}
+
+if(objetoPruebaNull){
+    console.log("No es nulo");
+}else{
+    console.log("Es nulo");
+}
+
+if(objetoPrueba){
+    console.log("es true el objeto");
+}else{
+    console.log("No es true"); 
+}
+
+const llamarImagen = (url, credenciales) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            const verificacion = verificarCredenciales(credenciales);
+            console.log("Debbug del dato", verificacion);
+            
+            if(verificacion){
+                const usuarioCompleto = verificacion;
+                resolve({
+                    imagen : "Imagen en " + url + " cargada",
+                    usuario: usuarioCompleto
+                });
+            }else {
+                reject("Las credenciales estan incorrectas");
+            }
+        },5000);
+    });
+}
+// como llamar a una promesa
+// then sirve para tomar ese valor de retorno de la funciona cuando termine
+
+const credenciales = {
+    username : "alejandro",
+    password : "1234"
+}
+
+llamarImagen("casa.png",credenciales).then(data => {
+    console.log("El resultado fue: ", data.imagen);
+    console.log("Mi usuario completo es: ", data.usuario);
+    
+}).catch(error => {
+    console.log("El error fue: ", error);
+})
 
 
 
