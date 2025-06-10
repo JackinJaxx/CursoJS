@@ -423,20 +423,20 @@
 // - tu conexion a internet
 // - logica que tengas intermediaria
 
-const verificarCredenciales = (usuarioLogeado) => {
-    const usuarioReferencia = {
+const usuarioReferencia = {
         username : "alejandro",
         password : "1234",
         nombre: "Jose alejandro",
         telefono : 962,
         cumpleaños : "08/04/2002"
-    }
+}
 
+// solo hace una cosa que seria verificar username y password
+const verificarCredenciales = (credenciales) => {
     let verificacion = false;
-    verificacion = usuarioLogeado.username === usuarioReferencia.username;
-    verificacion = usuarioLogeado.password === usuarioReferencia.password
-
-    return verificacion ? usuarioReferencia : null
+    verificacion = credenciales.username === usuarioReferencia.username;
+    verificacion = credenciales.password === usuarioReferencia.password
+    return verificacion;
 }
 
 // verificacion de datos 
@@ -462,13 +462,10 @@ const llamarImagen = (url, credenciales) => {
     return new Promise((resolve, reject) => {
         setTimeout(()=>{
             const verificacion = verificarCredenciales(credenciales);
-            console.log("Debbug del dato", verificacion);
-            
             if(verificacion){
-                const usuarioCompleto = verificacion;
                 resolve({
                     imagen : "Imagen en " + url + " cargada",
-                    usuario: usuarioCompleto
+                    usuario: usuarioReferencia
                 });
             }else {
                 reject("Las credenciales estan incorrectas");
