@@ -423,71 +423,194 @@
 // - tu conexion a internet
 // - logica que tengas intermediaria
 
-const usuarioReferencia = {
-        username : "alejandro",
-        password : "1234",
-        nombre: "Jose alejandro",
-        telefono : 962,
-        cumpleaños : "08/04/2002"
-}
+// const usuarioReferencia = {
+//         username : "alejandro",
+//         password : "1234",
+//         nombre: "Jose alejandro",
+//         telefono : 962,
+//         cumpleaños : "08/04/2002"
+// }
 
-// solo hace una cosa que seria verificar username y password
-const verificarCredenciales = (credenciales) => {
-    let verificacion = false;
-    verificacion = credenciales.username === usuarioReferencia.username;
-    verificacion = credenciales.password === usuarioReferencia.password
-    return verificacion;
-}
+// // solo hace una cosa que seria verificar username y password
+// const verificarCredenciales = (credenciales) => {
+//     let verificacion = false;
+//     verificacion = credenciales.username === usuarioReferencia.username;
+//     verificacion = credenciales.password === usuarioReferencia.password
+//     return verificacion;
+// }
 
-// verificacion de datos 
-// un objeto es true
-// if(objeto) da true
-// null js lo toma false
-const objetoPruebaNull = null;
-const objetoPrueba = {}
+// // verificacion de datos 
+// // un objeto es true
+// // if(objeto) da true
+// // null js lo toma false
+// const objetoPruebaNull = null;
+// const objetoPrueba = {}
 
-if(objetoPruebaNull){
-    console.log("No es nulo");
-}else{
-    console.log("Es nulo");
-}
+// if(objetoPruebaNull){
+//     console.log("No es nulo");
+// }else{
+//     console.log("Es nulo");
+// }
 
-if(objetoPrueba){
-    console.log("es true el objeto");
-}else{
-    console.log("No es true"); 
-}
+// if(objetoPrueba){
+//     console.log("es true el objeto");
+// }else{
+//     console.log("No es true"); 
+// }
 
-const llamarImagen = (url, credenciales) => {
+// const llamarImagen = (url, credenciales) => {
+//     return new Promise((resolve, reject) => {
+//         setTimeout(()=>{
+//             const verificacion = verificarCredenciales(credenciales);
+//             if(verificacion){
+//                 resolve({
+//                     imagen : "Imagen en " + url + " cargada",
+//                     usuario: usuarioReferencia
+//                 });
+//             }else {
+//                 reject("Las credenciales estan incorrectas");
+//             }
+//         },5000);
+//     });
+// }
+// // como llamar a una promesa
+// // then sirve para tomar ese valor de retorno de la funciona cuando termine
+
+// const credenciales = {
+//     username : "alejandro",
+//     password : "1234"
+// }
+
+// llamarImagen("casa.png",credenciales).then(data => {
+//     console.log("El resultado fue: ", data.imagen);
+//     console.log("Mi usuario completo es: ", data.usuario);
+    
+// }).catch(error => {
+//     console.log("El error fue: ", error);
+// });
+
+
+// ordenar la pizza -1 proceso
+// al ordenar la pizza puede no haber ingredientes
+// hornear la pizza - 2 proceso
+// si no funciona el horno no se puede
+// se paga la pizza - 3 proceso
+// se entrega la pizza - 4 proceso
+
+const ordenarPizza = () => {
     return new Promise((resolve, reject) => {
-        setTimeout(()=>{
-            const verificacion = verificarCredenciales(credenciales);
-            if(verificacion){
-                resolve({
-                    imagen : "Imagen en " + url + " cargada",
-                    usuario: usuarioReferencia
-                });
-            }else {
-                reject("Las credenciales estan incorrectas");
+        // vamos a simular que este proceso va a tardar 3 segundos
+        setTimeout(()=> {
+            const existenIngredientes = true;
+            if(existenIngredientes){
+                resolve("Se ordeno correctamente la pizza");
+            }else{
+                reject("No hay ingredientes")
             }
-        },5000);
+        }, 3000);
     });
 }
-// como llamar a una promesa
-// then sirve para tomar ese valor de retorno de la funciona cuando termine
 
-const credenciales = {
-    username : "alejandro",
-    password : "1234"
+const hornearPizza = ()=> {
+    return new Promise((resolve,reject) => {
+        // vamos a simular que se tarda 5 segundos
+        setTimeout(()=> {
+            const funcionaHorno = true;
+            if(funcionaHorno){
+                resolve("Se horneo correctamente la pizza");
+            }else{
+                reject("El horno no funciona correctamente");
+            }
+          
+        }, 5000);
+    })
 }
 
-llamarImagen("casa.png",credenciales).then(data => {
-    console.log("El resultado fue: ", data.imagen);
-    console.log("Mi usuario completo es: ", data.usuario);
-    
-}).catch(error => {
-    console.log("El error fue: ", error);
+const pagarPizza = ()=> {
+    return new Promise((resolve,reject)=> {
+        //vamos a simular que se tarda 1 segundo
+        setTimeout(()=>{
+            resolve("El pago fue hecho correctamente");
+        }, 1000)
+    })
+}
+
+const entregarPizza = () => {
+    return new Promise ((resolve,reject) => {
+        setTimeout(()=>{
+            resolve("Se entrego la pizza sin ningun problema")
+        },3000)
+    })
+}
+
+// ejecutar algo cada segundo
+// para mostrar un mensaje de esperando
+// setInterval(); 
+// 1 parametro pide la accion
+// 2 parametro cada cuanto se ejecuta
+
+const esperandoIntervalo = setInterval(()=> {
+    console.log("Estoy esperando");
+},1000)
+
+// para cancelar un setInterval seria clearInterval
+// clearInterval()
+// 1 parametro un setInterval
+
+const inicio = Date.now();
+
+ordenarPizza().then(res =>{
+    console.log("El mensaje fue: ", res);
+    return hornearPizza();
+}).then(res2 => {
+    console.log("El mensaje2 fue: ", res2);
+    return pagarPizza();
+}).then(res3 => {
+    console.log("El mensaje3 fue: ", res3);
+    return entregarPizza();    
+}).then(res4 => {
+    console.log("El mensaje4 fue: ", res4);
+    // clearInterval(esperandoIntervalo);
 })
+.catch(error => {
+    console.log("Existio un error en el proceso: ", error);
+    // clearInterval(esperandoIntervalo);
+})
+.finally(()=> {
+    const final = Date.now();
+    clearInterval(esperandoIntervalo);
+    const duracion = final - inicio;
+    console.log("El proceso tardo: ", duracion);
+})
+
+//promesa provee un then, catch pero igual proveee un finally
+
+// await y async
+
+// sintaxis
+// variables
+// flujos de control (while,for,if)
+
+// callbacks
+// funciones
+// promesas
+// asincronia
+
+//Trabajar con DOM
+// Document Object Managed
+// Api que nos proveee el navegador para poder manipular html o css
+
+const buttonLogear = document.querySelector("#btn1");
+buttonLogear.addEventListener( e => {
+    console.log();
+    alert();
+    // 
+})
+
+
+// frameworks React, Angular, Vite, Svelte
+
+
 
 
 
